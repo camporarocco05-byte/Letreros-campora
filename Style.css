@@ -1,0 +1,119 @@
+:root {
+    --primary: #dbb61b;
+    --white: #ffffff;
+    --black: #000000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--white);
+    color: var(--black);
+    line-height: 1.6;
+}
+
+.font-logo {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+header {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid var(--primary);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--white);
+}
+
+.logo-svg { height: 40px; }
+
+.logo-text span { color: var(--primary); }
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+nav ul li a:hover { color: var(--primary); }
+
+.btn {
+    background-color: var(--primary);
+    color: var(--black);
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: 800;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.btn-dark { background-color: var(--black); color: var(--white); }
+
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('WhatsApp_Image_2026-02-01_at_21.11.03-2.jpeg');
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--white);
+    padding: 0 5%;
+}
+
+.hero h1 { font-size: 3rem; color: var(--primary); margin-bottom: 1rem; }
+
+section { padding: 60px 5%; }
+
+.section-title { font-size: 2.5rem; margin-bottom: 40px; text-align: center; }
+.section-title span { color: var(--primary); }
+
+.nosotros { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+
+.video-container video { width: 100%; border: 2px solid var(--primary); border-radius: 8px; }
+
+.servicios { background-color: #f4f4f4; }
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.card { background: white; border-bottom: 4px solid var(--primary); border-radius: 8px; overflow: hidden; }
+.card img { width: 100%; height: 200px; object-fit: cover; }
+.card-content { padding: 15px; }
+
+.diseno { background-color: var(--primary); text-align: center; }
+
+footer { background-color: var(--black); color: white; padding: 40px 5%; }
+.footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+.footer-col a { color: var(--primary); display: block; margin-top: 10px; text-decoration: none; }
+.footer-bottom { text-align: center; margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
