@@ -1,0 +1,1349 @@
+python3 -c "
+import sys
+sys.path.insert(0, '/home/claude')
+import img_data
+
+# Read SVG
+with open('/home/claude/logo.svg','r') as f:
+    svg_raw = f.read()
+
+import base64
+svg_b64 = base64.b64encode(svg_raw.encode()).decode()
+
+html = open('/home/claude/template.html','w')
+
+html.write('''<!DOCTYPE html>
+<html lang=\"es\">
+<head>
+<meta charset=\"UTF-8\">
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+<title>Letreros Cámpora — Desde 1957</title>
+<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+<link href=\"https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">
+<style>
+  :root {
+    --gold: #dbb61b;
+    --gold-light: #e8c94a;
+    --gold-dark: #a8890e;
+    --black: #000000;
+    --white: #ffffff;
+    --gray-dark: #111111;
+    --gray-mid: #1a1a1a;
+    --gray-light: #222222;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: \'Barlow\', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    height: 72px;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(219,182,27,0.15);
+    transition: background 0.3s;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .nav-logo img { height: 42px; }
+
+  .nav-logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .nav-logo-text span:first-child {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-weight: 800;
+    font-size: 1.35rem;
+    letter-spacing: 0.12em;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+
+  .nav-logo-text span:last-child {
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black) !important;
+    padding: 0.5rem 1.4rem;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  .nav-cta:hover { background: var(--gold-light); color: var(--black) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 72px;
+  }
+
+  .hero-video-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(219,182,27,0.08) 100%);
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 6rem;
+    max-width: 900px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 0.4rem 1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-badge::before {
+    content: \'\';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .hero-title {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    font-weight: 900;
+    line-height: 0.92;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 3rem;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 0.9rem 2.2rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.35);
+    color: var(--white);
+    padding: 0.9rem 2.2rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    position: absolute;
+    bottom: 3rem;
+    right: 6rem;
+    z-index: 2;
+    display: flex;
+    gap: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1s forwards;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-num {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    font-weight: 500;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 7rem 6rem; }
+
+  .section-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-lead {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.8;
+    max-width: 640px;
+    font-weight: 300;
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    background: var(--gray-dark);
+    border-top: 1px solid rgba(219,182,27,0.1);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+
+  .about-text p {
+    color: rgba(255,255,255,0.6);
+    line-height: 1.85;
+    margin-bottom: 1.2rem;
+    font-size: 0.98rem;
+    font-weight: 300;
+  }
+
+  .about-text p strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .about-feature-list {
+    list-style: none;
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .about-feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .about-feature-list li::before {
+    content: \'\';
+    width: 20px; height: 2px;
+    background: var(--gold);
+    margin-top: 9px;
+    flex-shrink: 0;
+  }
+
+  .about-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .about-visual img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .about-visual img:first-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 16/9;
+  }
+
+  /* ── SERVICES ── */
+  .services {
+    background: var(--black);
+  }
+
+  .services-intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 4rem;
+    gap: 3rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(219,182,27,0.08);
+  }
+
+  .service-card {
+    background: var(--gray-dark);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .service-card::before {
+    content: \'\';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .service-card:hover { background: #161616; }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    font-size: 2rem;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+
+  .service-name {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+    color: var(--white);
+  }
+
+  .service-desc {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .service-num {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 2rem;
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(219,182,27,0.06);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* ── PORTFOLIO ── */
+  .portfolio {
+    background: var(--gray-dark);
+  }
+
+  .portfolio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 12px;
+  }
+
+  .portfolio-item {
+    position: relative;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .portfolio-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease, filter 0.4s;
+    filter: brightness(0.9);
+  }
+
+  .portfolio-item:hover img {
+    transform: scale(1.04);
+    filter: brightness(1);
+  }
+
+  .portfolio-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+  }
+
+  .portfolio-item:hover .portfolio-item-overlay { opacity: 1; }
+
+  .portfolio-item-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .pi-1 { grid-column: 1/6; grid-row: 1; min-height: 340px; }
+  .pi-2 { grid-column: 6/9; grid-row: 1; min-height: 340px; }
+  .pi-3 { grid-column: 9/13; grid-row: 1; min-height: 340px; }
+  .pi-4 { grid-column: 1/5; grid-row: 2; min-height: 280px; }
+  .pi-5 { grid-column: 5/13; grid-row: 2; min-height: 280px; }
+
+  /* ── DISEÑO / BRANDING ── */
+  .branding {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .branding .section-tag { color: rgba(0,0,0,0.5); }
+  .branding .section-title { color: var(--black); }
+  .branding .section-lead { color: rgba(0,0,0,0.65); }
+
+  .branding-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+
+  .branding-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .branding-feat {
+    border-top: 2px solid rgba(0,0,0,0.2);
+    padding-top: 1rem;
+  }
+
+  .branding-feat-title {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+    color: var(--black);
+  }
+
+  .branding-feat-desc {
+    font-size: 0.82rem;
+    color: rgba(0,0,0,0.55);
+    line-height: 1.6;
+  }
+
+  .branding-cta-wrap {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .btn-dark {
+    background: var(--black);
+    color: var(--white);
+    padding: 0.9rem 2.2rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .btn-dark:hover {
+    background: #111;
+    transform: translateY(-2px);
+  }
+
+  .branding-img { width: 100%; display: block; }
+
+  /* ── CONTACT ── */
+  .contact {
+    background: var(--black);
+    border-top: 1px solid rgba(219,182,27,0.1);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    margin-top: 4rem;
+  }
+
+  .contact-info h3 {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .contact-info p {
+    color: rgba(255,255,255,0.55);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .contact-link:hover { color: var(--gold); }
+
+  .contact-link-icon {
+    width: 36px; height: 36px;
+    background: rgba(219,182,27,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .contact-link:hover .contact-link-icon { background: rgba(219,182,27,0.2); }
+
+  .contact-form-box {
+    background: var(--gray-dark);
+    padding: 3rem;
+    border: 1px solid rgba(219,182,27,0.1);
+  }
+
+  .contact-form-box h3 {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    color: var(--gold);
+  }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--white);
+    padding: 0.85rem 1rem;
+    font-family: \'Barlow\', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus,
+  .form-group select,
+  .form-group textarea:focus { border-color: var(--gold); }
+
+  .form-group textarea { resize: vertical; min-height: 120px; }
+
+  .form-group select {
+    appearance: none;
+    cursor: pointer;
+    background-color: rgba(255,255,255,0.04);
+  }
+
+  .form-group select option { background: #1a1a1a; }
+
+  .form-submit {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 1rem 2.5rem;
+    font-family: \'Barlow\', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .form-submit:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+    color: var(--black);
+    border: none;
+    padding: 1rem 2.5rem;
+    font-family: \'Barlow\', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .form-submit:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--gray-dark);
+    border-top: 1px solid rgba(219,182,27,0.15);
+    padding: 4rem 6rem 2rem;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .footer-brand img { height: 50px; margin-bottom: 1rem; }
+
+  .footer-brand p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.8;
+    font-weight: 300;
+    max-width: 280px;
+  }
+
+  .footer-col h4 {
+    font-family: \'Barlow Condensed\', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .footer-col ul a {
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+
+  .footer-col ul a:hover { color: var(--white); }
+
+  .footer-social {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+
+  .social-btn {
+    width: 38px; height: 38px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .social-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+  }
+
+  .footer-bottom p {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.25);
+  }
+
+  .footer-bottom a {
+    color: rgba(219,182,27,0.5);
+    text-decoration: none;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── DIVIDER ── */
+  .gold-line {
+    width: 48px; height: 2px;
+    background: var(--gold);
+    display: block;
+    margin: 1.5rem 0;
+  }
+
+  /* ── WHATSAPP FLOAT ── */
+  .wa-float {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    z-index: 200;
+    background: #25d366;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    text-decoration: none;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+    50% { box-shadow: 0 4px 32px rgba(37,211,102,0.7); }
+  }
+
+  /* ── HAMBURGER MOBILE ── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--white);
+    transition: 0.3s;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    section { padding: 5rem 3rem; }
+    nav { padding: 0 2rem; }
+    .hero-content { padding: 0 3rem; }
+    .hero-stats { right: 3rem; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    section { padding: 4rem 1.5rem; }
+    .hero-content { padding: 0 1.5rem; max-width: 100%; }
+    .hero-stats { display: none; }
+    .about-grid, .branding-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .services-intro { flex-direction: column; align-items: flex-start; }
+    .portfolio-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .pi-1, .pi-2, .pi-3, .pi-4, .pi-5 {
+      grid-column: auto; grid-row: auto; min-height: 200px;
+    }
+    footer { padding: 3rem 1.5rem 1.5rem; }
+    .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    .about-visual { grid-template-columns: 1fr; }
+    .about-visual img:first-child { grid-column: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- WhatsApp Float -->
+<a href=\"https://wa.me/549XXXXXXXXXX\" class=\"wa-float\" target=\"_blank\" aria-label=\"Escribinos por WhatsApp\">
+  <svg width=\"26\" height=\"26\" viewBox=\"0 0 24 24\" fill=\"white\"><path d=\"M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z\"/><path d=\"M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.845L.057 23.522a.5.5 0 00.621.529l5.854-1.531A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.74 9.74 0 01-4.96-1.352l-.356-.21-3.676.962.98-3.584-.231-.368A9.712 9.712 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z\"/></svg>
+</a>
+
+<!-- NAV -->
+<nav id=\"main-nav\">
+  <a href=\"#\" class=\"nav-logo\">
+    <img src=\"data:image/svg+xml;base64,''' + svg_b64 + '''\" alt=\"Letreros Cámpora Logo\">
+    <div class=\"nav-logo-text\">
+      <span>Letreros Cámpora</span>
+      <span>Desde 1957 · Buenos Aires</span>
+    </div>
+  </a>
+  <ul class=\"nav-links\">
+    <li><a href=\"#nosotros\">Nosotros</a></li>
+    <li><a href=\"#servicios\">Servicios</a></li>
+    <li><a href=\"#portfolio\">Portfolio</a></li>
+    <li><a href=\"#diseno\">Diseño</a></li>
+    <li><a href=\"#contacto\" class=\"nav-cta\">Presupuesto</a></li>
+  </ul>
+  <button class=\"nav-hamburger\" id=\"hamburger\" aria-label=\"Menú\">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class=\"hero\" id=\"inicio\">
+  <div class=\"hero-video-wrap\">
+    <video autoplay muted loop playsinline>
+      <source src=\"Comp_1.mp4\" type=\"video/mp4\">
+    </video>
+  </div>
+  <div class=\"hero-overlay\"></div>
+  <div class=\"hero-content\">
+    <span class=\"hero-badge\">Empresa familiar · Buenos Aires · Desde 1957</span>
+    <h1 class=\"hero-title\">
+      Tu marca,<br>
+      <em>hecha letrero.</em>
+    </h1>
+    <p class=\"hero-sub\">Fabricamos letreros, carteles y señalética que identifica a tu negocio. Más de 65 años de experiencia familiar nos respaldan.</p>
+    <div class=\"hero-actions\">
+      <a href=\"#contacto\" class=\"btn-primary\">
+        Pedí tu presupuesto
+        <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg>
+      </a>
+      <a href=\"#portfolio\" class=\"btn-outline\">Ver trabajos</a>
+    </div>
+  </div>
+  <div class=\"hero-stats\">
+    <div class=\"stat\">
+      <span class=\"stat-num\">+65</span>
+      <span class=\"stat-label\">Años de trayectoria</span>
+    </div>
+    <div class=\"stat\">
+      <span class=\"stat-num\">∞</span>
+      <span class=\"stat-label\">Clientes satisfechos</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class=\"about\" id=\"nosotros\">
+  <div class=\"fade-up\">
+    <span class=\"section-tag\">Quiénes somos</span>
+    <h2 class=\"section-title\">Una familia<br>detrás de cada letrero</h2>
+    <span class=\"gold-line\"></span>
+  </div>
+  <div class=\"about-grid\">
+    <div class=\"about-text fade-up\">
+      <p>Somos <strong>Letreros Cámpora</strong>, una empresa familiar con más de 65 años de historia en el rubro de la cartelería. Lo que comenzó como un pequeño taller en Buenos Aires, hoy es un referente en la fabricación e instalación de letreros para comercios, empresas e instituciones de todo tipo.</p>
+      <p>Cada trabajo que realizamos lleva el cuidado y la dedicación de quien pone su nombre en lo que hace. No somos una fábrica impersonal: somos una familia que entiende que <strong>tu letrero es la primera imagen que el mundo tiene de tu negocio.</strong></p>
+      <p>Realizamos todo tipo de trabajos en cartelería. Si todavía no tenés un diseño definido, también podemos ayudarte a construir tu identidad visual desde cero.</p>
+      <ul class=\"about-feature-list\">
+        <li>Fabricación propia en nuestro taller</li>
+        <li>Instalación y montaje a cargo nuestro</li>
+        <li>Presupuestos sin cargo ni compromiso</li>
+        <li>Atención personalizada en cada proyecto</li>
+      </ul>
+    </div>
+    <div class=\"about-visual fade-up\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img2 + '''\" alt=\"Trabajo de Letreros Cámpora\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img4 + '''\" alt=\"Trabajo de Letreros Cámpora\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img5 + '''\" alt=\"Trabajo de Letreros Cámpora\">
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class=\"services\" id=\"servicios\">
+  <div class=\"services-intro\">
+    <div class=\"fade-up\">
+      <span class=\"section-tag\">Lo que hacemos</span>
+      <h2 class=\"section-title\">Nuestros<br>servicios</h2>
+    </div>
+    <p class=\"section-lead fade-up\" style=\"max-width:400px\">Trabajamos con todo tipo de materiales y técnicas. Realizamos cualquier trabajo de cartelería — consultanos por lo que necesitás.</p>
+  </div>
+
+  <div class=\"services-grid fade-up\">
+    <div class=\"service-card\">
+      <span class=\"service-icon\">🪧</span>
+      <h3 class=\"service-name\">Carteles</h3>
+      <p class=\"service-desc\">Frentes, marquesinas y carteles de todo tipo para comercios, locales y empresas. Diseño e instalación incluidos. La cara de tu negocio, bien hecha.</p>
+      <span class=\"service-num\">01</span>
+    </div>
+    <div class=\"service-card\">
+      <span class=\"service-icon\">🔤</span>
+      <h3 class=\"service-name\">Letras Corpóreas</h3>
+      <p class=\"service-desc\">Letras tridimensionales fabricadas en aluminio, acrílico o PVC. Pueden ser iluminadas con LED o sin iluminación. Dan volumen y presencia a cualquier frente.</p>
+      <span class=\"service-num\">02</span>
+    </div>
+    <div class=\"service-card\">
+      <span class=\"service-icon\">✨</span>
+      <h3 class=\"service-name\">Letreros Plateados</h3>
+      <p class=\"service-desc\">Acabados en aluminio cepillado, acero inoxidable o plata espejo. Ideales para rubros que buscan una imagen sofisticada y duradera.</p>
+      <span class=\"service-num\">03</span>
+    </div>
+    <div class=\"service-card\">
+      <span class=\"service-icon\">🎨</span>
+      <h3 class=\"service-name\">Pintados</h3>
+      <p class=\"service-desc\">Carteles pintados a mano o con aerógrafo. Una técnica clásica y artesanal que nunca pasa de moda. Aplicamos pinturas de alta duración para exteriores.</p>
+      <span class=\"service-num\">04</span>
+    </div>
+    <div class=\"service-card\">
+      <span class=\"service-icon\">🏷️</span>
+      <h3 class=\"service-name\">Pasacalles</h3>
+      <p class=\"service-desc\">Banners y pasacalles impresos en lona de alta calidad, con ojales y refuerzos. Perfectos para promociones, eventos y publicidad en vía pública.</p>
+      <span class=\"service-num\">05</span>
+    </div>
+    <div class=\"service-card\">
+      <span class=\"service-icon\">🪟</span>
+      <h3 class=\"service-name\">Esmerilados</h3>
+      <p class=\"service-desc\">Vinilos esmerilados para vidrieras, oficinas y locales. Generan privacidad y estética al mismo tiempo. Podemos realizar cualquier diseño o tipografía.</p>
+      <span class=\"service-num\">06</span>
+    </div>
+  </div>
+
+  <div style=\"text-align:center; margin-top:3rem\" class=\"fade-up\">
+    <p style=\"color:rgba(255,255,255,0.45); font-size:0.9rem; margin-bottom:1.5rem;\">¿No encontrás lo que buscás? <strong style=\"color:var(--gold)\">Realizamos todo tipo de trabajos en cartelería.</strong> Consultanos sin compromiso.</p>
+    <a href=\"#contacto\" class=\"btn-primary\">Consultá por tu trabajo</a>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class=\"portfolio\" id=\"portfolio\">
+  <div class=\"portfolio-header fade-up\">
+    <div>
+      <span class=\"section-tag\">Nuestro trabajo</span>
+      <h2 class=\"section-title\">Portfolio</h2>
+    </div>
+    <a href=\"https://www.instagram.com/letreros.campora\" target=\"_blank\" class=\"btn-outline\" style=\"font-size:0.78rem\">
+      Ver más en Instagram
+      <svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg>
+    </a>
+  </div>
+
+  <div class=\"portfolio-grid fade-up\">
+    <div class=\"portfolio-item pi-1\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img1 + '''\" alt=\"Tu Farma — Letreros Cámpora\">
+      <div class=\"portfolio-item-overlay\"><span class=\"portfolio-item-label\">Carteles · Tu Farma</span></div>
+    </div>
+    <div class=\"portfolio-item pi-2\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img3 + '''\" alt=\"CartaSur — Letreros Cámpora\">
+      <div class=\"portfolio-item-overlay\"><span class=\"portfolio-item-label\">Carteles · CartaSur</span></div>
+    </div>
+    <div class=\"portfolio-item pi-3\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img5 + '''\" alt=\"Tentaciones — Letreros Cámpora\">
+      <div class=\"portfolio-item-overlay\"><span class=\"portfolio-item-label\">Frente · Tentaciones</span></div>
+    </div>
+    <div class=\"portfolio-item pi-4\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img4 + '''\" alt=\"Ortopedia Lanús — Letreros Cámpora\">
+      <div class=\"portfolio-item-overlay\"><span class=\"portfolio-item-label\">Letras Corpóreas · Ortopedia Lanús</span></div>
+    </div>
+    <div class=\"portfolio-item pi-5\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img2 + '''\" alt=\"Pecorino — Letreros Cámpora\">
+      <div class=\"portfolio-item-overlay\"><span class=\"portfolio-item-label\">Letras Corpóreas · Pecorino</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDING / DISEÑO -->
+<section class=\"branding\" id=\"diseno\">
+  <div class=\"branding-grid\">
+    <div class=\"fade-up\">
+      <span class=\"section-tag\">También hacemos</span>
+      <h2 class=\"section-title\">¿Todavía no tenés<br>tu imagen?</h2>
+      <span class=\"gold-line\" style=\"background:#000; opacity:0.3\"></span>
+      <p class=\"section-lead\">Si aún no contás con un diseño definido, <strong>nos encargamos de crear tu identidad visual</strong> desde cero. Un buen letrero empieza con un buen diseño.</p>
+      <div class=\"branding-features\" style=\"margin-top:2rem\">
+        <div class=\"branding-feat\">
+          <div class=\"branding-feat-title\">Carteles & Banners</div>
+          <div class=\"branding-feat-desc\">Diseño gráfico adaptado a cualquier formato.</div>
+        </div>
+        <div class=\"branding-feat\">
+          <div class=\"branding-feat-title\">Identidad de marca</div>
+          <div class=\"branding-feat-desc\">Logo, paleta de colores y tipografías para tu negocio.</div>
+        </div>
+        <div class=\"branding-feat\">
+          <div class=\"branding-feat-title\">Vidrieras</div>
+          <div class=\"branding-feat-desc\">Esmerilados, vinilos y decoración para tu local.</div>
+        </div>
+        <div class=\"branding-feat\">
+          <div class=\"branding-feat-title\">Flyers & Material</div>
+          <div class=\"branding-feat-desc\">Piezas de comunicación para redes y print.</div>
+        </div>
+      </div>
+      <div class=\"branding-cta-wrap\">
+        <a href=\"#contacto\" class=\"btn-dark\">Quiero mi diseño</a>
+      </div>
+    </div>
+    <div class=\"fade-up\">
+      <img src=\"data:image/jpeg;base64,''' + img_data.img3 + '''\" alt=\"Diseño de imagen para locales\" class=\"branding-img\" style=\"aspect-ratio:4/3;object-fit:cover\">
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class=\"contact\" id=\"contacto\">
+  <div class=\"fade-up\">
+    <span class=\"section-tag\">Trabajemos juntos</span>
+    <h2 class=\"section-title\">Pedí tu<br>presupuesto</h2>
+    <span class=\"gold-line\"></span>
+    <p class=\"section-lead\">Los presupuestos son <strong style=\"color:var(--white)\">sin costo y sin compromiso</strong>. Contanos tu proyecto y te respondemos a la brevedad.</p>
+  </div>
+  <div class=\"contact-grid\">
+    <div class=\"contact-info fade-up\">
+      <h3>Hablemos</h3>
+      <p>Podés contactarnos por el medio que más te convenga. Estamos en Buenos Aires y trabajamos para todo el país.</p>
+      <div class=\"contact-links\">
+        <a href=\"https://wa.me/549XXXXXXXXXX\" target=\"_blank\" class=\"contact-link\">
+          <div class=\"contact-link-icon\">
+            <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"var(--gold)\"><path d=\"M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z\"/><path d=\"M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.845L.057 23.522a.5.5 0 00.621.529l5.854-1.531A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.74 9.74 0 01-4.96-1.352l-.356-.21-3.676.962.98-3.584-.231-.368A9.712 9.712 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z\"/></svg>
+          </div>
+          WhatsApp
+        </a>
+        <a href=\"https://www.instagram.com/letreros.campora\" target=\"_blank\" class=\"contact-link\">
+          <div class=\"contact-link-icon\">
+            <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"var(--gold)\"><path d=\"M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z\"/></svg>
+          </div>
+          Instagram — @letreros.campora
+        </a>
+        <a href=\"https://www.facebook.com/letrerosCampora\" target=\"_blank\" class=\"contact-link\">
+          <div class=\"contact-link-icon\">
+            <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"var(--gold)\"><path d=\"M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z\"/></svg>
+          </div>
+          Facebook
+        </a>
+        <a href=\"https://maps.google.com\" target=\"_blank\" class=\"contact-link\">
+          <div class=\"contact-link-icon\">
+            <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"var(--gold)\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z\"/></svg>
+          </div>
+          Ver en Google Maps
+        </a>
+      </div>
+    </div>
+    <div class=\"contact-form-box fade-up\">
+      <h3>Contanos tu proyecto</h3>
+      <div class=\"form-group\">
+        <label>Nombre</label>
+        <input type=\"text\" placeholder=\"Tu nombre o el de tu empresa\">
+      </div>
+      <div class=\"form-group\">
+        <label>WhatsApp / Teléfono</label>
+        <input type=\"tel\" placeholder=\"+54 9 ...\">
+      </div>
+      <div class=\"form-group\">
+        <label>Tipo de trabajo</label>
+        <select>
+          <option value=\"\">Seleccioná una opción...</option>
+          <option>Cartel de frente / Marquesina</option>
+          <option>Letras corpóreas</option>
+          <option>Letrero plateado</option>
+          <option>Cartel pintado</option>
+          <option>Pasacalle / Banner</option>
+          <option>Esmerilado / Vidriera</option>
+          <option>Diseño de imagen / Branding</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class=\"form-group\">
+        <label>Contanos más</label>
+        <textarea placeholder=\"Describí brevemente lo que necesitás. Si ya tenés diseño, mejor; si no, también podemos ayudarte.\"></textarea>
+      </div>
+      <button class=\"form-submit\" onclick=\"handleSubmit()\">Enviar consulta por WhatsApp →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class=\"footer-top\">
+    <div class=\"footer-brand\">
+      <img src=\"data:image/svg+xml;base64,''' + svg_b64 + '''\" alt=\"Letreros Cámpora\">
+      <p>Empresa familiar fabricante de letreros y cartelería. Más de 65 años de trayectoria en Buenos Aires.</p>
+      <div class=\"footer-social\">
+        <a href=\"https://www.instagram.com/letreros.campora\" target=\"_blank\" class=\"social-btn\" aria-label=\"Instagram\">
+          <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z\"/></svg>
+        </a>
+        <a href=\"https://www.facebook.com/letrerosCampora\" target=\"_blank\" class=\"social-btn\" aria-label=\"Facebook\">
+          <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z\"/></svg>
+        </a>
+        <a href=\"https://wa.me/549XXXXXXXXXX\" target=\"_blank\" class=\"social-btn\" aria-label=\"WhatsApp\">
+          <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z\"/><path d=\"M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.845L.057 23.522a.5.5 0 00.621.529l5.854-1.531A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.74 9.74 0 01-4.96-1.352l-.356-.21-3.676.962.98-3.584-.231-.368A9.712 9.712 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z\"/></svg>
+        </a>
+        <a href=\"https://maps.google.com\" target=\"_blank\" class=\"social-btn\" aria-label=\"Google Maps\">
+          <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z\"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class=\"footer-col\">
+      <h4>Servicios</h4>
+      <ul>
+        <li><a href=\"#servicios\">Carteles</a></li>
+        <li><a href=\"#servicios\">Letras Corpóreas</a></li>
+        <li><a href=\"#servicios\">Letreros Plateados</a></li>
+        <li><a href=\"#servicios\">Pintados</a></li>
+        <li><a href=\"#servicios\">Pasacalles</a></li>
+        <li><a href=\"#servicios\">Esmerilados</a></li>
+      </ul>
+    </div>
+    <div class=\"footer-col\">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href=\"#nosotros\">Nosotros</a></li>
+        <li><a href=\"#portfolio\">Portfolio</a></li>
+        <li><a href=\"#diseno\">Diseño & Branding</a></li>
+        <li><a href=\"#contacto\">Presupuesto</a></li>
+      </ul>
+    </div>
+    <div class=\"footer-col\">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href=\"https://wa.me/549XXXXXXXXXX\">WhatsApp</a></li>
+        <li><a href=\"https://www.instagram.com/letreros.campora\">Instagram</a></li>
+        <li><a href=\"https://www.facebook.com/letrerosCampora\">Facebook</a></li>
+        <li><a href=\"https://maps.google.com\">Google Maps</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class=\"footer-bottom\">
+    <p>© 2025 Letreros Cámpora. Todos los derechos reservados.</p>
+    <p>Hecho con ❤ en Buenos Aires · <a href=\"#inicio\">Volver arriba ↑</a></p>
+  </div>
+</footer>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add(\'visible\');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(\'.fade-up\').forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  window.addEventListener(\'scroll\', () => {
+    const nav = document.getElementById(\'main-nav\');
+    if (window.scrollY > 50) {
+      nav.style.background = \'rgba(0,0,0,0.98)\';
+    } else {
+      nav.style.background = \'rgba(0,0,0,0.92)\';
+    }
+  });
+
+  // WhatsApp form submit
+  function handleSubmit() {
+    const nombre = document.querySelector(\'input[type="text"]\').value;
+    const tel = document.querySelector(\'input[type="tel"]\').value;
+    const tipo = document.querySelector(\'select\').value;
+    const detalle = document.querySelector(\'textarea\').value;
+    
+    let msg = \'Hola! Me comunico desde el sitio web.\\n\\n\';
+    if (nombre) msg += `*Nombre:* ${nombre}\\n`;
+    if (tel) msg += `*Teléfono:* ${tel}\\n`;
+    if (tipo) msg += `*Trabajo:* ${tipo}\\n`;
+    if (detalle) msg += `*Detalle:* ${detalle}`;
+    
+    const url = \'https://wa.me/549XXXXXXXXXX?text=\' + encodeURIComponent(msg);
+    window.open(url, \'_blank\');
+  }
+</script>
+
+</body>
+</html>
+''')
+
+html.close()
+print('HTML written')
