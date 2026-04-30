@@ -6,7 +6,6 @@
     <title>Letreros Cámpora - Cartelería y Diseño</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Variables de color según tus indicaciones */
         :root {
             --primary: #dbb61b;
             --white: #ffffff;
@@ -14,7 +13,6 @@
             --gray: #1a1a1a;
         }
 
-        /* Reseteo básico y tipografía */
         * {
             margin: 0;
             padding: 0;
@@ -28,10 +26,9 @@
             line-height: 1.6;
         }
 
-        /* Tipografía especial para el logo (Fallback si no está Qurova instalada) */
         @font-face {
             font-family: 'Qurova DEMO';
-            src: local('Qurova DEMO'), Arial, sans-serif; /* Idealmente subir el archivo .woff2 o .ttf al repo */
+            src: local('Qurova DEMO'), Arial, sans-serif; 
         }
 
         .font-logo {
@@ -41,7 +38,6 @@
             letter-spacing: 1px;
         }
 
-        /* Barra de Navegación */
         header {
             background-color: var(--black);
             color: var(--white);
@@ -94,7 +90,6 @@
             color: var(--primary);
         }
 
-        /* Botón general */
         .btn {
             background-color: var(--primary);
             color: var(--black);
@@ -113,12 +108,12 @@
             background-color: #e5c330;
         }
 
-        /* Sección Hero */
         .hero {
             background-color: var(--black);
             color: var(--white);
             padding: 100px 5%;
             text-align: center;
+            /* Imagen cargada como fondo del encabezado */
             background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('WhatsApp Image 2026-02-01 at 21.11.03-2.jpeg');
             background-size: cover;
             background-position: center;
@@ -136,7 +131,6 @@
             margin: 0 auto 40px auto;
         }
 
-        /* Secciones Generales */
         section {
             padding: 80px 5%;
         }
@@ -154,7 +148,6 @@
             color: var(--primary);
         }
 
-        /* Nosotros / Historia */
         .nosotros {
             background-color: var(--white);
             display: grid;
@@ -175,7 +168,6 @@
             border: 2px solid var(--primary);
         }
 
-        /* Servicios / Portafolio */
         .servicios {
             background-color: #f9f9f9;
         }
@@ -203,6 +195,7 @@
             width: 100%;
             height: 250px;
             object-fit: cover;
+            background-color: var(--black);
         }
 
         .card-content {
@@ -215,7 +208,6 @@
             color: var(--black);
         }
 
-        /* Sección Diseño Integral */
         .diseno {
             background-color: var(--primary);
             color: var(--black);
@@ -237,7 +229,6 @@
             font-weight: 600;
         }
 
-        /* Footer */
         footer {
             background-color: var(--black);
             color: var(--white);
@@ -277,13 +268,12 @@
             font-size: 0.9rem;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .nosotros {
                 grid-template-columns: 1fr;
             }
             nav ul {
-                display: none; /* Acá podrías sumar un menú hamburguesa con JS */
+                display: none; 
             }
         }
     </style>
@@ -292,6 +282,7 @@
 
     <header>
         <a href="#" class="logo-container">
+            <!-- LOGO SVG REFERENCIADO TEXTUALMENTE -->
             <img src="c corporea.svg" alt="Icono Cámpora" class="logo-svg">
             <div class="logo-text font-logo">Letreros <span>Cámpora</span></div>
         </a>
@@ -299,7 +290,7 @@
             <ul>
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#nosotros">Nosotros</a></li>
-                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#servicios">Trabajos</a></li>
                 <li><a href="#diseno">Diseño</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
@@ -310,7 +301,7 @@
     <section id="inicio" class="hero">
         <h1 class="font-logo">Impacto visual con historia</h1>
         <p>Somos una empresa familiar con 70 años de trayectoria en el mercado gráfico. Realizamos todo tipo de trabajos de cartelería y diseño para que tu negocio destaque como se merece.</p>
-        <a href="https://wa.me/tunumerodewhatsapp" target="_blank" class="btn">Cotizar sin cargo</a>
+        <a href="#contacto" class="btn">Cotizar sin cargo</a>
     </section>
 
     <section id="nosotros" class="nosotros">
@@ -320,7 +311,8 @@
             <p>Desde grandes marquesinas hasta los detalles más finos en interiores, trabajamos codo a codo con cada cliente. Queremos escucharte, asesorarte y brindarte un servicio cercano, profesional y de excelencia.</p>
         </div>
         <div class="video-container">
-            <video autoplay loop muted playsinline>
+            <!-- MP4 REFERENCIADO TEXTUALMENTE -->
+            <video autoplay loop muted playsinline controls>
                 <source src="Comp 1.mp4" type="video/mp4">
                 Tu navegador no soporta la reproducción de video.
             </video>
@@ -329,17 +321,20 @@
 
     <section id="servicios" class="servicios">
         <h2 class="section-title">Nuestros <span>Trabajos</span></h2>
+        <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">Realizamos todo tipo de trabajos. Ponete en contacto para pedir presupuestos sin costo.</p>
         
         <div class="portfolio-grid">
             
+            <!-- 1. Carteles -->
             <div class="card">
-                <img src="WhatsApp Image 2026-02-01 at 21.11.03-2.jpeg" alt="Carteles CartaSur">
+                <img src="WhatsApp Image 2025-12-06 at 23.07.16.jpeg" alt="Carteles CartaSur">
                 <div class="card-content">
                     <h3>Carteles</h3>
                     <p>Estructuras sólidas (frontlight y backlight) diseñadas para resistir y destacar la fachada de tu local de día y de noche.</p>
                 </div>
             </div>
 
+            <!-- 2. Letras Corpóreas -->
             <div class="card">
                 <img src="WhatsApp Image 2026-02-01 at 21.11.03.jpeg" alt="Letras Corpóreas Ortopedia">
                 <div class="card-content">
@@ -348,26 +343,40 @@
                 </div>
             </div>
 
+            <!-- 3. Plateados -->
             <div class="card">
-                <img src="WhatsApp Image 2026-02-01 at 21.12.34.jpeg" alt="Carteles Pintados Panadería">
+                <!-- Usando una imagen como referencia de plateado/metálico -->
+                <img src="WhatsApp Image 2026-02-01 at 21.11.03-2.jpeg" alt="Trabajos Plateados">
                 <div class="card-content">
-                    <h3>Plateados y Pintados</h3>
-                    <p>El oficio clásico en su máxima expresión. Técnicas tradicionales combinadas con pinturas modernas de alta durabilidad.</p>
+                    <h3>Plateados</h3>
+                    <p>Acabados metálicos de alta gama. Ideales para estudios profesionales, recepciones y marcas que buscan una estética premium.</p>
                 </div>
             </div>
 
+            <!-- 4. Pintados -->
             <div class="card">
-                <img src="WhatsApp Image 2025-12-06 at 23.07.16.jpeg" alt="Pasacalles y Distribuidores">
+                <img src="WhatsApp Image 2026-02-01 at 21.12.34.jpeg" alt="Carteles Pintados Panadería">
                 <div class="card-content">
-                    <h3>Pasacalles y Lonas</h3>
+                    <h3>Pintados</h3>
+                    <p>El oficio clásico en su máxima expresión. Letristas tradicionales combinados con pinturas modernas de alta durabilidad.</p>
+                </div>
+            </div>
+
+            <!-- 5. Pasacalles -->
+            <div class="card">
+                <!-- Reutilizando imagen hasta subir más fotos de pasacalles -->
+                <img src="WhatsApp Image 2025-12-06 at 23.07.16.jpeg" alt="Pasacalles y Lonas">
+                <div class="card-content">
+                    <h3>Pasacalles</h3>
                     <p>Comunicación urbana directa. Ideales para promociones, eventos o anuncios de alto tránsito vehicular y peatonal.</p>
                 </div>
             </div>
 
+            <!-- 6. Esmerilados -->
             <div class="card">
-                <img src="WhatsApp Image 2025-12-06 at 23,07,16-2-Picsart-AiImageEnhancer.jpg" alt="Vinilos Farmacia">
+                <img src="WhatsApp Image 2025-12-06 at 23,07,16-2-Picsart-AiImageEnhancer.jpg" alt="Vinilos Farmacia Esmerilados">
                 <div class="card-content">
-                    <h3>Esmerilados y Vinilos</h3>
+                    <h3>Esmerilados</h3>
                     <p>Privacidad, elegancia y decoración para vidrieras y oficinas. Soluciones ploteadas a medida de tu espacio.</p>
                 </div>
             </div>
@@ -377,27 +386,28 @@
 
     <section id="diseno" class="diseno">
         <h2 class="section-title">¿Aún no tenés tu <span>imagen</span>?</h2>
-        <p>No te preocupes. Realizamos el diseño de tu identidad desde cero. Nos encargamos de todo el proceso creativo y productivo.</p>
-        <p>Logotipos, carteles, banners, diseño de vidrieras, flyers y mucho más. Tenemos todo resuelto en un solo lugar.</p>
-        <a href="https://wa.me/tunumerodewhatsapp" target="_blank" style="background-color: var(--black); color: var(--white);" class="btn">Hablemos de tu diseño</a>
+        <p>No te preocupes. Podemos realizar el diseño de tu imagen si aún no la tienen.</p>
+        <p>Desde carteles, banners, identidad visual, vidrieras, flyers y mucho más. Tenemos todo resuelto para que tu marca se vea profesional.</p>
+        <a href="#contacto" style="background-color: var(--black); color: var(--white);" class="btn">Hablemos de tu diseño</a>
     </section>
 
     <footer id="contacto">
         <div class="footer-content">
             <div class="footer-col">
                 <div class="logo-text font-logo" style="margin-bottom: 20px;">Letreros <span style="color:var(--primary);">Cámpora</span></div>
-                <p>Tu empresa de confianza en cartelería. Contactanos para pedir tu presupuesto sin costo y te asesoramos al instante.</p>
+                <p>Tu empresa familiar de confianza. Recordá que realizamos presupuestos sin costo, no dudes en escribirnos.</p>
             </div>
             <div class="footer-col">
                 <h4>Contacto Directo</h4>
-                <a href="https://wa.me/tunumerodewhatsapp" target="_blank">📞 WhatsApp: +54 9 11 6756-1336</a> <a href="mailto:tuemail@gmail.com">✉️ Email: info@letreroscampora.com</a>
+                <a href="https://wa.me/5491167561336" target="_blank">📞 WhatsApp: +54 9 11 6756-1336</a> 
+                <a href="mailto:info@letreroscampora.com">✉️ Email: info@letreroscampora.com</a>
                 <p>📍 Buenos Aires, Argentina</p>
             </div>
             <div class="footer-col">
                 <h4>Nuestras Redes</h4>
-                <a href="https://instagram.com/tuinstagram" target="_blank">📱 Instagram</a>
-                <a href="https://facebook.com/tufacebook" target="_blank">👥 Facebook</a>
-                <a href="https://maps.google.com/?q=tulugar" target="_blank">🗺️ Google Maps</a>
+                <a href="https://instagram.com/" target="_blank">📱 Instagram</a>
+                <a href="https://facebook.com/" target="_blank">👥 Facebook</a>
+                <a href="https://maps.google.com/" target="_blank">🗺️ Google Maps</a>
             </div>
         </div>
         <div class="footer-bottom">
