@@ -5,289 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Letreros Cámpora - Cartelería y Diseño</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #dbb61b;
-            --white: #ffffff;
-            --black: #000000;
-            --gray: #1a1a1a;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--white);
-            color: var(--black);
-            line-height: 1.6;
-        }
-
-        @font-face {
-            font-family: 'Qurova DEMO';
-            src: local('Qurova DEMO'), Arial, sans-serif; 
-        }
-
-        .font-logo {
-            font-family: 'Qurova DEMO', 'Inter', sans-serif;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        header {
-            background-color: var(--black);
-            color: var(--white);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 3px solid var(--primary);
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            color: var(--white);
-        }
-
-        .logo-svg {
-            height: 40px;
-            width: auto;
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            color: var(--white);
-        }
-        
-        .logo-text span {
-            color: var(--primary);
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        nav ul li a {
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: var(--primary);
-        }
-
-        .btn {
-            background-color: var(--primary);
-            color: var(--black);
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-weight: 800;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.3s, background-color 0.3s;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            background-color: #e5c330;
-        }
-
-        .hero {
-            background-color: var(--black);
-            color: var(--white);
-            padding: 100px 5%;
-            text-align: center;
-            /* Imagen cargada como fondo del encabezado */
-            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('WhatsApp Image 2026-02-01 at 21.11.03-2.jpeg');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 40px auto;
-        }
-
-        section {
-            padding: 80px 5%;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 50px;
-            color: var(--black);
-            text-transform: uppercase;
-            font-weight: 800;
-        }
-
-        .section-title span {
-            color: var(--primary);
-        }
-
-        .nosotros {
-            background-color: var(--white);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .nosotros-text p {
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-        }
-
-        .video-container video {
-            width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 2px solid var(--primary);
-        }
-
-        .servicios {
-            background-color: #f9f9f9;
-        }
-
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            border-bottom: 4px solid var(--primary);
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-        }
-
-        .card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            background-color: var(--black);
-        }
-
-        .card-content {
-            padding: 20px;
-        }
-
-        .card-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: var(--black);
-        }
-
-        .diseno {
-            background-color: var(--primary);
-            color: var(--black);
-            text-align: center;
-        }
-
-        .diseno .section-title {
-            color: var(--black);
-        }
-        
-        .diseno .section-title span {
-            color: var(--white);
-        }
-
-        .diseno p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 30px auto;
-            font-weight: 600;
-        }
-
-        footer {
-            background-color: var(--black);
-            color: var(--white);
-            padding: 60px 5% 20px 5%;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-col h4 {
-            color: var(--primary);
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-
-        .footer-col p, .footer-col a {
-            color: #ccc;
-            text-decoration: none;
-            margin-bottom: 10px;
-            display: block;
-            transition: color 0.3s;
-        }
-
-        .footer-col a:hover {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #333;
-            color: #777;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .nosotros {
-                grid-template-columns: 1fr;
-            }
-            nav ul {
-                display: none; 
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
         <a href="#" class="logo-container">
-            <!-- LOGO SVG REFERENCIADO TEXTUALMENTE -->
-            <img src="ccorporea.svg" alt="Icono Cámpora" class="logo-svg">
+            <img src="c_corporea.svg" alt="Icono Cámpora" class="logo-svg">
             <div class="logo-text font-logo">Letreros <span>Cámpora</span></div>
         </a>
         <nav>
-            <ul>
+            <ul class="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#nosotros">Nosotros</a></li>
                 <li><a href="#servicios">Trabajos</a></li>
@@ -300,84 +28,73 @@
 
     <section id="inicio" class="hero">
         <h1 class="font-logo">Impacto visual con historia</h1>
-        <p>Somos una empresa familiar con 70 años de trayectoria en el mercado gráfico. Realizamos todo tipo de trabajos de cartelería y diseño para que tu negocio destaque como se merece.</p>
+        <p>Somos una empresa familiar con casi 70 años de trayectoria en el mercado gráfico. Realizamos todo tipo de trabajos de cartelería y diseño para que tu negocio destaque.</p>
         <a href="#contacto" class="btn">Cotizar sin cargo</a>
     </section>
 
     <section id="nosotros" class="nosotros">
         <div class="nosotros-text">
-            <h2 class="section-title" style="text-align: left;">Casi <span>70 años</span> de trayectoria</h2>
-            <p>Hola, somos Letreros Cámpora. Nos enorgullece ser una empresa familiar que ha pasado de generación en generación, adaptándonos a las nuevas tecnologías sin perder la esencia artesanal que nos caracteriza.</p>
-            <p>Desde grandes marquesinas hasta los detalles más finos en interiores, trabajamos codo a codo con cada cliente. Queremos escucharte, asesorarte y brindarte un servicio cercano, profesional y de excelencia.</p>
+            <h2 class="section-title" style="text-align: left;">Experiencia y <span>Familia</span></h2>
+            <p>Hola, somos Letreros Cámpora. Nos enorgullece ser una empresa familiar que ha pasado de generación en generación, adaptándonos a las nuevas tecnologías sin perder la esencia artesanal.</p>
+            <p>Desde grandes marquesinas hasta los detalles más finos, trabajamos codo a codo con cada cliente para brindar un servicio cercano y profesional.</p>
         </div>
         <div class="video-container">
-            <!-- MP4 REFERENCIADO TEXTUALMENTE -->
             <video autoplay loop muted playsinline controls>
-                <source src="Comp 1.mp4" type="video/mp4">
-                Tu navegador no soporta la reproducción de video.
+                <source src="Comp_1.mp4" type="video/mp4">
+                Tu navegador no soporta video.
             </video>
         </div>
     </section>
 
     <section id="servicios" class="servicios">
         <h2 class="section-title">Nuestros <span>Trabajos</span></h2>
-        <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">Realizamos todo tipo de trabajos. Ponete en contacto para pedir presupuestos sin costo.</p>
-        
         <div class="portfolio-grid">
             
-            <!-- 1. Carteles -->
             <div class="card">
-                <img src="WhatsApp Image 2025-12-06 at 23.07.16.jpeg" alt="Carteles CartaSur">
+                <img src="WhatsApp_Image_2025-12-06_at_23.07.16.jpeg" alt="Carteles">
                 <div class="card-content">
                     <h3>Carteles</h3>
-                    <p>Estructuras sólidas (frontlight y backlight) diseñadas para resistir y destacar la fachada de tu local de día y de noche.</p>
+                    <p>Estructuras sólidas en frontlight y backlight diseñadas para durar.</p>
                 </div>
             </div>
 
-            <!-- 2. Letras Corpóreas -->
             <div class="card">
-                <img src="WhatsApp Image 2026-02-01 at 21.11.03.jpeg" alt="Letras Corpóreas Ortopedia">
+                <img src="WhatsApp_Image_2026-02-01_at_21.11.03.jpeg" alt="Letras Corpóreas">
                 <div class="card-content">
                     <h3>Letras Corpóreas</h3>
-                    <p>Volumen y jerarquía para tu marca. Fabricadas en chapa, polyfan, acrílico o MDF, con o sin iluminación LED.</p>
+                    <p>Volumen y jerarquía en chapa, polyfan o acrílico con iluminación LED.</p>
                 </div>
             </div>
 
-            <!-- 3. Plateados -->
             <div class="card">
-                <!-- Usando una imagen como referencia de plateado/metálico -->
-                <img src="WhatsApp Image 2026-02-01 at 21.11.03-2.jpeg" alt="Trabajos Plateados">
+                <img src="WhatsApp_Image_2026-02-01_at_21.11.03-2.jpeg" alt="Plateados">
                 <div class="card-content">
                     <h3>Plateados</h3>
-                    <p>Acabados metálicos de alta gama. Ideales para estudios profesionales, recepciones y marcas que buscan una estética premium.</p>
+                    <p>Acabados metálicos premium para una estética profesional y elegante.</p>
                 </div>
             </div>
 
-            <!-- 4. Pintados -->
             <div class="card">
-                <img src="WhatsApp Image 2026-02-01 at 21.12.34.jpeg" alt="Carteles Pintados Panadería">
+                <img src="WhatsApp_Image_2026-02-01_at_21.12.34.jpeg" alt="Pintados">
                 <div class="card-content">
                     <h3>Pintados</h3>
-                    <p>El oficio clásico en su máxima expresión. Letristas tradicionales combinados con pinturas modernas de alta durabilidad.</p>
+                    <p>Tradición y oficio letrista con pinturas de alta resistencia.</p>
                 </div>
             </div>
 
-            <!-- 5. Pasacalles -->
             <div class="card">
-                <!-- Reutilizando imagen hasta subir más fotos de pasacalles -->
-                <img src="WhatsApp Image 2025-12-06 at 23.07.16.jpeg" alt="Pasacalles y Lonas">
+                <img src="WhatsApp_Image_2025-12-06_at_23.07.16.jpeg" alt="Pasacalles">
                 <div class="card-content">
                     <h3>Pasacalles</h3>
-                    <p>Comunicación urbana directa. Ideales para promociones, eventos o anuncios de alto tránsito vehicular y peatonal.</p>
+                    <p>Publicidad urbana directa de alto impacto para anuncios rápidos.</p>
                 </div>
             </div>
 
-            <!-- 6. Esmerilados -->
             <div class="card">
-                <img src="WhatsApp Image 2025-12-06 at 23,07,16-2-Picsart-AiImageEnhancer.jpg" alt="Vinilos Farmacia Esmerilados">
+                <img src="WhatsApp_Image_2025-12-06_at_23,07,16-2-Picsart-AiImageEnhancer.jpg" alt="Esmerilados">
                 <div class="card-content">
                     <h3>Esmerilados</h3>
-                    <p>Privacidad, elegancia y decoración para vidrieras y oficinas. Soluciones ploteadas a medida de tu espacio.</p>
+                    <p>Vinilos decorativos y de privacidad para vidrieras y oficinas.</p>
                 </div>
             </div>
 
@@ -385,45 +102,30 @@
     </section>
 
     <section id="diseno" class="diseno">
-        <h2 class="section-title">¿Aún no tenés tu <span>imagen</span>?</h2>
-        <p>No te preocupes. Podemos realizar el diseño de tu imagen si aún no la tienen.</p>
-        <p>Desde carteles, banners, identidad visual, vidrieras, flyers y mucho más. Tenemos todo resuelto para que tu marca se vea profesional.</p>
-        <a href="#contacto" style="background-color: var(--black); color: var(--white);" class="btn">Hablemos de tu diseño</a>
+        <h2 class="section-title">Diseño de <span>Imagen</span></h2>
+        <p>¿Aún no tenés tu marca? Realizamos el diseño integral de tu identidad.</p>
+        <p>Banners, identidad, vidrieras, flyers y más. Todo lo que tu negocio necesita.</p>
+        <a href="#contacto" class="btn btn-dark">Consultar por diseño</a>
     </section>
 
     <footer id="contacto">
         <div class="footer-content">
             <div class="footer-col">
-                <div class="logo-text font-logo" style="margin-bottom: 20px;">Letreros <span style="color:var(--primary);">Cámpora</span></div>
-                <p>Tu empresa familiar de confianza. Recordá que realizamos presupuestos sin costo, no dudes en escribirnos.</p>
+                <div class="logo-text font-logo">Letreros <span>Cámpora</span></div>
+                <p>Presupuestos sin costo. Contacto directo y profesional.</p>
             </div>
             <div class="footer-col">
-                <h4>Contacto Directo</h4>
-                <a href="https://wa.me/5491167561336" target="_blank">📞 WhatsApp: +54 9 11 6756-1336</a> 
-                <a href="mailto:info@letreroscampora.com">✉️ Email: info@letreroscampora.com</a>
-                <p>📍 Buenos Aires, Argentina</p>
-            </div>
-            <div class="footer-col">
-                <h4>Nuestras Redes</h4>
-                <a href="https://instagram.com/" target="_blank">📱 Instagram</a>
-                <a href="https://facebook.com/" target="_blank">👥 Facebook</a>
-                <a href="https://maps.google.com/" target="_blank">🗺️ Google Maps</a>
+                <h4>Contacto</h4>
+                <a href="https://wa.me/5491167561336" target="_blank">WhatsApp</a>
+                <a href="#">Instagram</a>
+                <a href="#">Google Maps</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Letreros Cámpora. Todos los derechos reservados.</p>
+            <p>© 2026 Letreros Cámpora - 70 años de trayectoria.</p>
         </div>
     </footer>
 
-    <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
